@@ -13,7 +13,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.UniqueElements;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -27,7 +29,8 @@ public class Animal implements Serializable {
 	@JoinColumn(name = "id_instituicao_fk", referencedColumnName = "idusuario")
 	@ManyToOne(optional = false)
 	private Usuario idInstituicaoFk;
-	@NotBlank
+	@NotNull
+	@UniqueElements
 	private Integer idMicrochip;
 	private String nome;
 	private String porte;
