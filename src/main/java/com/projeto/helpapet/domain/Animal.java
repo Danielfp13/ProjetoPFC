@@ -2,7 +2,9 @@ package com.projeto.helpapet.domain;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -35,8 +38,8 @@ public class Animal implements Serializable {
 	private String raca;
 	private String vermifugado;
 	private String especie;
-	
-	@Column(name = "data_de_Recolhimento",columnDefinition = "DATE")
+
+	@Column(name = "data_de_Recolhimento", columnDefinition = "DATE")
 	@JsonFormat(pattern = "dd/MM/yyyy HH:mm")
 	private Date dataRecolhimento;
 	private String esterelizado;
@@ -45,8 +48,8 @@ public class Animal implements Serializable {
 
 	// @OneToMany(cascade = CascadeType.ALL, mappedBy = "idAnimal")
 	// private Set<ArquivoAnimal> arquivoAnimalSet;
-//	@OneToMany(cascade = CascadeType.ALL, mappedBy = "idAnimalFk")
-	// private Set<Adocao> adocaoSet;
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "idAnimalFk")
+	private Set<Adocao> adocaoSet;
 
 	public Animal() {
 
@@ -191,6 +194,14 @@ public class Animal implements Serializable {
 
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
+	}
+
+	public Set<Adocao> getAdocaoSet() {
+		return adocaoSet;
+	}
+
+	public void setAdocaoSet(Set<Adocao> adocaoSet) {
+		this.adocaoSet = adocaoSet;
 	}
 
 	@Override

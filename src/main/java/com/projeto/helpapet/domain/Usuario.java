@@ -58,8 +58,8 @@ public class Usuario implements Serializable {
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "idInstituicaoFk")
 	private Set<Animal> animals = new HashSet<Animal>();
 
-	//@OneToMany(cascade = CascadeType.ALL, mappedBy = "idAdotanteFk")
-	//private Set<Adocao> listAdocao = new HashSet<Adocao>();
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "idAdotanteFk")
+	private Set<Adocao> listAdocao = new HashSet<Adocao>();
 
 	public Usuario() {
 
