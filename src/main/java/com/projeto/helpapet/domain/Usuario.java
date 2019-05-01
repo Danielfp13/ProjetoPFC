@@ -53,7 +53,6 @@ public class Usuario implements Serializable {
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "idUsuario")
 	private Set<Telefone> listTelefones = new HashSet<Telefone>();
-	
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "idInstituicaoFk")
 	private Set<Animal> animals = new HashSet<Animal>();
@@ -269,7 +268,21 @@ public class Usuario implements Serializable {
 		this.listTelefones = listTelefones;
 	}
 
+	public Set<Animal> getAnimals() {
+		return animals;
+	}
 
+	public void setAnimals(Set<Animal> animals) {
+		this.animals = animals;
+	}
+
+	public Set<Adocao> getListAdocao() {
+		return listAdocao;
+	}
+
+	public void setListAdocao(Set<Adocao> listAdocao) {
+		this.listAdocao = listAdocao;
+	}
 
 	@Override
 	public int hashCode() {
@@ -300,4 +313,3 @@ public class Usuario implements Serializable {
 	}
 
 }
-

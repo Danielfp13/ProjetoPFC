@@ -46,8 +46,8 @@ public class Animal implements Serializable {
 	private String cor;
 	private String descricao;
 
-	// @OneToMany(cascade = CascadeType.ALL, mappedBy = "idAnimal")
-	// private Set<ArquivoAnimal> arquivoAnimalSet;
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "animal")
+	private Set<ArquivoAnimal> arquivoAnimalSet;
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "idAnimalFk")
 	private Set<Adocao> adocaoSet;
 
@@ -202,6 +202,14 @@ public class Animal implements Serializable {
 
 	public void setAdocaoSet(Set<Adocao> adocaoSet) {
 		this.adocaoSet = adocaoSet;
+	}
+
+	public Set<ArquivoAnimal> getArquivoAnimalSet() {
+		return arquivoAnimalSet;
+	}
+
+	public void setArquivoAnimalSet(Set<ArquivoAnimal> arquivoAnimalSet) {
+		this.arquivoAnimalSet = arquivoAnimalSet;
 	}
 
 	@Override
