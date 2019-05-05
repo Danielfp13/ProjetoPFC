@@ -1,8 +1,10 @@
 package com.projeto.helpapet.domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -13,24 +15,29 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import org.hibernate.annotations.Check;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
+@Check(constraints = "situacao IN('Aprovavo','Reprovado')")
 public class Usuario implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer idUsuario;
 	private String nome;
+	@Column(unique=true)
 	private String email;
 
-	@JsonFormat(pattern = "dd/MM/yyyy HH:mm")
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	@Column(name = "dataAtua", columnDefinition = "DATE")
 	private Date dataAtualizacao;
 
 	@Column(name = "dataCadastro", columnDefinition = "DATE")
-	@JsonFormat(pattern = "dd/MM/yyyy HH:mm")
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date dataCadastro;
+	
 	private String situacao;
 	private String senha;
 	private String municipio;
@@ -41,18 +48,21 @@ public class Usuario implements Serializable {
 	private String numero;
 	private byte[] foto;
 	private String tipo;
+	@Column(unique=true)
 	private String cpf;
+	@Column(unique=true)
 	private String rg;
 
 	@Column(name = "dataNascimento", columnDefinition = "DATE")
 	@JsonFormat(pattern = "dd/MM/yyyy HH:mm")
 	private Date dataNascimento;
+	@Column(unique=true)
 	private String cnpj;
 	private String situacaoDeAprovacao;
 	private String descricaoInstituicao;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "idUsuario")
-	private Set<Telefone> listTelefones = new HashSet<Telefone>();
+	private List<Telefone> listTelefones = new ArrayList<Telefone>();
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "idInstituicaoFk")
 	private Set<Animal> animals = new HashSet<Animal>();
@@ -260,11 +270,13 @@ public class Usuario implements Serializable {
 		this.descricaoInstituicao = descricaoInstituicao;
 	}
 
-	public Set<Telefone> getListTelefones() {
+
+
+	public List<Telefone> getListTelefones() {
 		return listTelefones;
 	}
 
-	public void setListTelefones(Set<Telefone> listTelefones) {
+	public void setListTelefones(List<Telefone> listTelefones) {
 		this.listTelefones = listTelefones;
 	}
 

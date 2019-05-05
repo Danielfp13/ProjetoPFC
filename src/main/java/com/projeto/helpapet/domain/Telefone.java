@@ -9,15 +9,17 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class Telefone implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	private Integer id;
 
 	private String telefone;
-
+	@JsonIgnore
 	@JoinColumn(name = "id_usuario", referencedColumnName = "idusuario")
 	@ManyToOne(optional = false)
 	private Usuario idUsuario;
@@ -26,15 +28,20 @@ public class Telefone implements Serializable {
 
 	}
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
+	public Telefone(Integer id, String telefone, Usuario idUsuario) {
+		super();
+		this.id = id;
+		this.telefone = telefone;
+		this.idUsuario = idUsuario;
 	}
 
-	public int getId() {
+
+
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
