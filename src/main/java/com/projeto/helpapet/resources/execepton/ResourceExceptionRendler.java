@@ -9,8 +9,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import com.projeto.hepapet.services.exception.DataIntegrityException;
-import com.projeto.hepapet.services.exception.ObjectNotFoundException;
+import com.projeto.helpapet.services.exception.DataIntegrityException;
+import com.projeto.helpapet.services.exception.ObjectNotFoundException;
 
 @ControllerAdvice
 public class ResourceExceptionRendler {

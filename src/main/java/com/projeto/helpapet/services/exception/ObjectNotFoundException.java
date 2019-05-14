@@ -1,4 +1,4 @@
-package com.projeto.hepapet.services.exception;
+package com.projeto.helpapet.services.exception;
 
 public class ObjectNotFoundException extends RuntimeException {
 	private static final long serialVersionUID = 1L;

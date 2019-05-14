@@ -9,11 +9,11 @@ import java.lang.annotation.Target;
 import javax.validation.Constraint;
 import javax.validation.Payload; 
 	 
-	@Constraint(validatedBy = UsuarioUpdateValidator.class) 
+	@Constraint(validatedBy = AdotanteUpdateValidator.class) 
 	@Target({ ElementType.TYPE })
 	@Retention(RetentionPolicy.RUNTIME) 
 	
-	public @interface UsuarioUpdate { 
+	public @interface AdotanteUpdate { 
 	 String message() default "Erro de validação"; 
 	 
 	    Class<?>[] groups() default {}; 

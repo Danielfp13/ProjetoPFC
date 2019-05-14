@@ -3,9 +3,9 @@ package com.projeto.helpapet.repositories;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.projeto.helpapet.domain.Usuario;
+import com.projeto.helpapet.domain.Animal;
 
-public interface UsuarioRepository extends JpaRepository<Usuario,Integer>{
+public interface AnimalRepository extends JpaRepository<Animal,Integer>{
 	@Transactional(readOnly=true)
-	Usuario findByEmail(String email);
+	Animal findByIdMicrochip(String idMicrochip);
 }

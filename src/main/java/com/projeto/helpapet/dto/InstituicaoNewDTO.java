@@ -3,17 +3,18 @@ package com.projeto.helpapet.dto;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.br.CNPJ;
-import org.hibernate.validator.constraints.br.CPF;
 
-import com.projeto.helpapet.services.validation.UsuarioInsert;
+import com.projeto.helpapet.services.validation.InstituicaoInsert;
 
-@UsuarioInsert
-public class UsuarioNewDTO  implements Serializable {
+@InstituicaoInsert
+public class InstituicaoNewDTO  implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private Integer idUsuario;
 	@NotEmpty(message="Preenchimento obrigatório")
@@ -24,8 +25,23 @@ public class UsuarioNewDTO  implements Serializable {
 	private String email;
 	private Date dataAtualizacao;
 	private Date dataCadastro;
-  //  @Check(constraints = "situacao IN('Aprovavo','Reprovado')"),
 	private String situacao;
+	
+	
+	
+	@AssertTrue(message="Tem que aceitar o termo de uso")
+	@Column(name = "termo", columnDefinition = "Boolean")
+	private Boolean termo;
+	
+	public Boolean getTermo() {
+		return termo;
+	}
+
+	public void setTermo(Boolean termo) {
+		this.termo = termo;
+	}
+	
+	
 	@NotEmpty(message="Preenchimento obrigatório")
 	private String senha;
 	@NotEmpty(message="Preenchimento obrigatório")
@@ -40,26 +56,20 @@ public class UsuarioNewDTO  implements Serializable {
 	private String rua;
 	@NotEmpty(message="Preenchimento obrigatório")
 	private String numero;
-	private byte[] foto;
+	private String foto;
 	@NotEmpty(message="Preenchimento obrigatório")
-	private String tipo;
-	@NotEmpty(message="Preenchimento obrigatório")
-	@CPF(message="CPF incorreto")
-	private String cpf;
-	@NotEmpty(message="Preenchimento obrigatório")
-	private String rg;
-	private Date dataNascimento;
 	@CNPJ(message="CNPJ incorreto")
 	private String cnpj;
+	@NotEmpty(message="Preenchimento obrigatório")
 	private String situacaoDeAprovacao;
 	private String descricaoInstituicao;
 	@NotEmpty(message="Preenchimento obrigatório")
 	private String telefone1;
 	private String telefone2;
-	private String telefone3;
 
 
-	public UsuarioNewDTO() {
+
+	public InstituicaoNewDTO() {
 
 	}
 
@@ -167,44 +177,12 @@ public class UsuarioNewDTO  implements Serializable {
 		this.numero = numero;
 	}
 
-	public byte[] getFoto() {
+	public String getFoto() {
 		return foto;
 	}
 
-	public void setFoto(byte[] foto) {
+	public void setFoto(String foto) {
 		this.foto = foto;
-	}
-
-	public String getTipo() {
-		return tipo;
-	}
-
-	public void setTipo(String tipo) {
-		this.tipo = tipo;
-	}
-
-	public String getCpf() {
-		return cpf;
-	}
-
-	public void setCpf(String cpf) {
-		this.cpf = cpf;
-	}
-
-	public String getRg() {
-		return rg;
-	}
-
-	public void setRg(String rg) {
-		this.rg = rg;
-	}
-
-	public Date getDataNascimento() {
-		return dataNascimento;
-	}
-
-	public void setDataNascimento(Date dataNascimento) {
-		this.dataNascimento = dataNascimento;
 	}
 
 	public String getCnpj() {
@@ -247,12 +225,5 @@ public class UsuarioNewDTO  implements Serializable {
 		this.telefone2 = telefone2;
 	}
 
-	public String getTelefone3() {
-		return telefone3;
-	}
 
-	public void setTelefone3(String telefone3) {
-		this.telefone3 = telefone3;
-	}
-	
 }

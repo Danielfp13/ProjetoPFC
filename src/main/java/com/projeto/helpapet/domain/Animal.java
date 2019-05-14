@@ -2,9 +2,9 @@ package com.projeto.helpapet.domain;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,55 +15,90 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.validator.constraints.UniqueElements;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Animal implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	@Column(name = "id", columnDefinition = "integer")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	private Integer id;
 
-	@JoinColumn(name = "id_instituicao_fk", referencedColumnName = "idusuario")
-	@ManyToOne(optional = false)
-	private Usuario idInstituicaoFk;
 	@NotNull
-	@UniqueElements
-	private Integer idMicrochip;
+	@Column(name = "id_Microchip", columnDefinition = "varchar(50)", unique = true)
+	private String idMicrochip;
+
+	@NotNull
+	@Column(name = "nome", columnDefinition = "varchar(100)")
 	private String nome;
+
+	@NotNull
+	@Column(name = "porte", columnDefinition = "varchar(8)")
 	private String porte;
+
+	@NotNull
+	@Column(name = "genero", columnDefinition = "varchar(6)")
 	private String genero;
+
+	@NotNull
+	@Column(name = "vacinado", columnDefinition = "varchar(3)")
 	private String vacinado;
-	@Column(name = "dataRecolhimento", columnDefinition = "DATE")
+
+	@Column(name = "ano_nascimento", columnDefinition = "DATE")
 	private Date anoNascimento;
+
+	@NotNull
+	@Column(name = "raca", columnDefinition = "varchar(30)")
 	private String raca;
+
+	@NotNull
+	@Column(name = "vermifugado", columnDefinition = "varchar(3)")
 	private String vermifugado;
+
+	@NotNull
+	@Column(name = "especie", columnDefinition = "varchar(30)")
 	private String especie;
 
+	@NotNull
 	@Column(name = "data_de_Recolhimento", columnDefinition = "DATE")
-	@JsonFormat(pattern = "dd/MM/yyyy HH:mm")
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date dataRecolhimento;
+
+	@NotNull
+	@Column(name = "esterelizado", columnDefinition = "varchar(3)")
 	private String esterelizado;
+
+	@NotNull
+	@Column(name = "cor", columnDefinition = "varchar(30)")
 	private String cor;
+
+	@Column(name = "descricao", columnDefinition = "text")
 	private String descricao;
 
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "animal")
-	private Set<ArquivoAnimal> arquivoAnimalSet;
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "idAnimalFk")
-	private Set<Adocao> adocaoSet;
+	@JsonIgnore
+	@OneToMany(mappedBy = "idAnimalFk")
+	private Set<ArquivoAnimal> arquivoAnimalSet = new HashSet<>();
+	@JsonIgnore
+	@OneToMany( mappedBy = "idAnimalFk")
+	private Set<Adocao> adocaoSet= new HashSet<Adocao>();
+
+	@ManyToOne
+	@JsonIgnore
+	@JoinColumn(name = "id_instituicao_fk", referencedColumnName = "id_usuario")
+	private Instituicao instituicao;
 
 	public Animal() {
 
 	}
 
-	public Animal(int id, Usuario idInstituicaoFk, Integer idMicrochip, String nome, String porte, String genero,
+	public Animal(Integer id, Instituicao instituicao, String idMicrochip, String nome, String porte, String genero,
 			String vacinado, Date anoNascimento, String raca, String vermifugado, String especie, Date dataRecolhimento,
 			String esterelizado, String cor, String descricao) {
 		super();
 		this.id = id;
-		this.idInstituicaoFk = idInstituicaoFk;
+		this.instituicao = instituicao;
 		this.idMicrochip = idMicrochip;
 		this.nome = nome;
 		this.porte = porte;
@@ -79,27 +114,27 @@ public class Animal implements Serializable {
 		this.descricao = descricao;
 	}
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
-	public Usuario getIdInstituicaoFk() {
-		return idInstituicaoFk;
+	public Instituicao getInstituicao() {
+		return instituicao;
 	}
 
-	public void setIdInstituicaoFk(Usuario idInstituicaoFk) {
-		this.idInstituicaoFk = idInstituicaoFk;
+	public void setInstituicao(Instituicao instituicao) {
+		this.instituicao = instituicao;
 	}
 
-	public Integer getIdMicrochip() {
+	public String getIdMicrochip() {
 		return idMicrochip;
 	}
 
-	public void setIdMicrochip(Integer idMicrochip) {
+	public void setIdMicrochip(String idMicrochip) {
 		this.idMicrochip = idMicrochip;
 	}
 
@@ -219,7 +254,7 @@ public class Animal implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + id;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
 
@@ -232,7 +267,10 @@ public class Animal implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Animal other = (Animal) obj;
-		if (id != other.id)
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
 			return false;
 		return true;
 	}

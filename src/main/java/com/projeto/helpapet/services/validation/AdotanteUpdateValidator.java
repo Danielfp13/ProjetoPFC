@@ -11,32 +11,32 @@ import javax.validation.ConstraintValidatorContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.HandlerMapping;
 
-import com.projeto.helpapet.domain.Usuario;
-import com.projeto.helpapet.dto.UsuarioDTO;
-import com.projeto.helpapet.repositories.UsuarioRepository;
+import com.projeto.helpapet.domain.Adotante;
+import com.projeto.helpapet.dto.AdotanteNewDTO;
+import com.projeto.helpapet.repositories.AdotanteRepository;
 import com.projeto.helpapet.resources.execepton.FieldMessage;
 
-public class UsuarioUpdateValidator implements ConstraintValidator<UsuarioUpdate, UsuarioDTO> {
+public class AdotanteUpdateValidator implements ConstraintValidator<AdotanteUpdate, AdotanteNewDTO> {
 	
 	@Autowired
 	private HttpServletRequest request;
 	
 	@Autowired
-	private UsuarioRepository repo;
+	private AdotanteRepository repo;
 	
 	@Override
-	public void initialize(UsuarioUpdate ann) {
+	public void initialize(AdotanteUpdate ann) {
 	}
 
 	@Override
-	public boolean isValid(UsuarioDTO objDto, ConstraintValidatorContext context) {
+	public boolean isValid(AdotanteNewDTO objDto, ConstraintValidatorContext context) {
 //pega o id da uri
 		@SuppressWarnings("unchecked")
 		Map<String,String> map = (Map<String,String>)request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
 		Integer uriId =Integer.parseInt(map.get("id"));
 		List<FieldMessage> list = new ArrayList<>();
 		
-		Usuario aux = repo.findByEmail(objDto.getEmail());
+		Adotante aux = repo.findByEmail(objDto.getEmail());
 		
 		if(aux != null && !aux.getIdUsuario().equals(uriId)) {
 			list.add(new FieldMessage("Email","Email ja existente:"));
@@ -50,3 +50,4 @@ public class UsuarioUpdateValidator implements ConstraintValidator<UsuarioUpdate
 		return list.isEmpty();
 	}
 }
+

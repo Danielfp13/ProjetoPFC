@@ -1,74 +1,107 @@
 package com.projeto.helpapet.domain;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.validation.constraints.AssertTrue;
+import javax.validation.constraints.NotNull;
 
-import org.hibernate.annotations.Check;
+import org.hibernate.validator.constraints.UniqueElements;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
-@Check(constraints = "situacao IN('Aprovavo','Reprovado')")
-public class Usuario implements Serializable {
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+//@Check(constraints = "situacao IN('Ativo','Inativo')")
+public abstract class Usuario implements Serializable {
 	private static final long serialVersionUID = 1L;
+	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id_usuario", columnDefinition = "integer")
+	@NotNull
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private Integer idUsuario;
+	
+	@NotNull
+	@Column(name = "nome", columnDefinition = "varchar(100)")
 	private String nome;
-	@Column(unique=true)
+	
+	@AssertTrue(message="Tem que aceitar o termo de uso")
+	@NotNull
+	@Column(name = "termo", columnDefinition = "Boolean")
+	private Boolean termo; 
+	
+	@NotNull
+	@Column(name = "email",unique=true, columnDefinition = "varchar(100)")
 	private String email;
 
 	@JsonFormat(pattern = "dd/MM/yyyy")
-	@Column(name = "dataAtua", columnDefinition = "DATE")
+	@Column(name = "data_atualizacao", columnDefinition = "DATE")
 	private Date dataAtualizacao;
+	
+	public Boolean getTermo() {
+		return termo;
+	}
 
-	@Column(name = "dataCadastro", columnDefinition = "DATE")
+	public void setTermo(Boolean termo) {
+		this.termo = termo;
+	}
+
+	@Column(name = "data_cadastro", columnDefinition = "DATE")
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date dataCadastro;
-	
+
+	@NotNull
+	@Column(name = "situacao",columnDefinition = "varchar(8)")
 	private String situacao;
+	
+	@NotNull
+	@Column(name = "senha",columnDefinition = "varchar(15)")
 	private String senha;
+	
+	@NotNull
+	@Column(name = "municipio",columnDefinition = "varchar(100)")
 	private String municipio;
+	
+	@NotNull
+	@Column(name = "cep",columnDefinition = "varchar(9)")
 	private String cep;
+	
+	
+	@NotNull
+	@Column(name = "uf",columnDefinition = "varchar(2)")
 	private String uf;
+	
+	@NotNull
+	@Column(name = "bairro",columnDefinition = "varchar(60)")
 	private String bairro;
+	
+	@NotNull
+	@Column(name = "rua",columnDefinition = "varchar(100)")
 	private String rua;
+	
+	@NotNull
+	@Column(name = "numero",columnDefinition = "varchar(5)")	
 	private String numero;
-	private byte[] foto;
-	private String tipo;
-	@Column(unique=true)
-	private String cpf;
-	@Column(unique=true)
-	private String rg;
-
-	@Column(name = "dataNascimento", columnDefinition = "DATE")
-	@JsonFormat(pattern = "dd/MM/yyyy HH:mm")
-	private Date dataNascimento;
-	@Column(unique=true)
-	private String cnpj;
-	private String situacaoDeAprovacao;
-	private String descricaoInstituicao;
-
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "idUsuario")
-	private List<Telefone> listTelefones = new ArrayList<Telefone>();
-
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "idInstituicaoFk")
-	private Set<Animal> animals = new HashSet<Animal>();
-
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "idAdotanteFk")
-	private Set<Adocao> listAdocao = new HashSet<Adocao>();
+	
+	@Column(name = "foto",columnDefinition = "varchar(150)")
+	private String foto;
+	
+	@UniqueElements
+	@ElementCollection
+	@CollectionTable(name = "TELEFONE")
+	private Set<String> telefones = new HashSet<>();
 
 	public Usuario() {
 
@@ -76,8 +109,7 @@ public class Usuario implements Serializable {
 
 	public Usuario(Integer idUsuario, String nome, String email, Date dataAtualizacao, Date dataCadastro,
 			String situacao, String senha, String municipio, String cep, String uf, String bairro, String rua,
-			String numero, byte[] foto, String tipo, String cpf, String rg, Date dataNascimento, String cnpj,
-			String situacaoDeAprovacao, String descricaoInstituicao) {
+			String numero, String foto, Boolean termo) {
 		super();
 		this.idUsuario = idUsuario;
 		this.nome = nome;
@@ -93,13 +125,8 @@ public class Usuario implements Serializable {
 		this.rua = rua;
 		this.numero = numero;
 		this.foto = foto;
-		this.tipo = tipo;
-		this.cpf = cpf;
-		this.rg = rg;
-		this.dataNascimento = dataNascimento;
-		this.cnpj = cnpj;
-		this.situacaoDeAprovacao = situacaoDeAprovacao;
-		this.descricaoInstituicao = descricaoInstituicao;
+		this.termo = termo;
+
 	}
 
 	public Integer getIdUsuario() {
@@ -206,102 +233,27 @@ public class Usuario implements Serializable {
 		this.numero = numero;
 	}
 
-	public byte[] getFoto() {
+	public String getFoto() {
 		return foto;
 	}
 
-	public void setFoto(byte[] foto) {
+	public void setFoto(String foto) {
 		this.foto = foto;
 	}
 
-	public String getTipo() {
-		return tipo;
+	public Set<String> getTelefones() {
+		return telefones;
 	}
 
-	public void setTipo(String tipo) {
-		this.tipo = tipo;
-	}
-
-	public String getCpf() {
-		return cpf;
-	}
-
-	public void setCpf(String cpf) {
-		this.cpf = cpf;
-	}
-
-	public String getRg() {
-		return rg;
-	}
-
-	public void setRg(String rg) {
-		this.rg = rg;
-	}
-
-	public Date getDataNascimento() {
-		return dataNascimento;
-	}
-
-	public void setDataNascimento(Date dataNascimento) {
-		this.dataNascimento = dataNascimento;
-	}
-
-	public String getCnpj() {
-		return cnpj;
-	}
-
-	public void setCnpj(String cnpj) {
-		this.cnpj = cnpj;
-	}
-
-	public String getSituacaoDeAprovacao() {
-		return situacaoDeAprovacao;
-	}
-
-	public void setSituacaoDeAprovacao(String situacaoDeAprovacao) {
-		this.situacaoDeAprovacao = situacaoDeAprovacao;
-	}
-
-	public String getDescricaoInstituicao() {
-		return descricaoInstituicao;
-	}
-
-	public void setDescricaoInstituicao(String descricaoInstituicao) {
-		this.descricaoInstituicao = descricaoInstituicao;
-	}
-
-
-
-	public List<Telefone> getListTelefones() {
-		return listTelefones;
-	}
-
-	public void setListTelefones(List<Telefone> listTelefones) {
-		this.listTelefones = listTelefones;
-	}
-
-	public Set<Animal> getAnimals() {
-		return animals;
-	}
-
-	public void setAnimals(Set<Animal> animals) {
-		this.animals = animals;
-	}
-
-	public Set<Adocao> getListAdocao() {
-		return listAdocao;
-	}
-
-	public void setListAdocao(Set<Adocao> listAdocao) {
-		this.listAdocao = listAdocao;
+	public void setTelefones(Set<String> telefones) {
+		this.telefones = telefones;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + idUsuario;
-		result = prime * result + ((tipo == null) ? 0 : tipo.hashCode());
+		result = prime * result + ((idUsuario == null) ? 0 : idUsuario.hashCode());
 		return result;
 	}
 
@@ -314,14 +266,11 @@ public class Usuario implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Usuario other = (Usuario) obj;
-		if (idUsuario != other.idUsuario)
-			return false;
-		if (tipo == null) {
-			if (other.tipo != null)
+		if (idUsuario == null) {
+			if (other.idUsuario != null)
 				return false;
-		} else if (!tipo.equals(other.tipo))
+		} else if (!idUsuario.equals(other.idUsuario))
 			return false;
 		return true;
 	}
-
 }

@@ -2,38 +2,40 @@ package com.projeto.helpapet.domain;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 
 @Entity
 public class ArquivoAnimal implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name = "id", columnDefinition = "integer")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
     private int id;
     
-	@JoinColumn(name = "id_animal_fk", referencedColumnName = "id")
+	
+	@JoinColumn(name = "id_Animal_fk", referencedColumnName = "id")
 	@ManyToOne(optional = false)
-    private Animal animal;
+    private Animal idAnimalFk;
 	
 	
-    @Lob
-    private byte[] foto;
+	@Column(name = "foto", columnDefinition = "varchar(150)")
+    private String foto;
     
     public ArquivoAnimal() {
     	
     }
 
 
-	public ArquivoAnimal(int id, Animal animal, byte[] foto) {
+	public ArquivoAnimal(int id, Animal idAnimalFk, String foto) {
 		super();
 		this.id = id;
-		this.animal = animal;
+		this.idAnimalFk = idAnimalFk;
 		this.foto = foto;
 	}
 
@@ -46,18 +48,18 @@ public class ArquivoAnimal implements Serializable {
 	}
 
 	public Animal getAnimal() {
-		return animal;
+		return idAnimalFk;
 	}
 
-	public void setAnimal(Animal animal) {
-		this.animal = animal;
+	public void setAnimal(Animal idAnimalFk) {
+		this.idAnimalFk = idAnimalFk;
 	}
 
-	public byte[] getFoto() {
+	public String getFoto() {
 		return foto;
 	}
 
-	public void setFoto(byte[] foto) {
+	public void setFoto(String foto) {
 		this.foto = foto;
 	}
 

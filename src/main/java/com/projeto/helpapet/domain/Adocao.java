@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -17,39 +18,51 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 public class Adocao implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	@Column(name = "id", columnDefinition = "integer")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	private Integer id;
 
-	@JoinColumn(name = "id_animal_fk", referencedColumnName = "id")
-	@ManyToOne(optional = false)
-	private Animal idAnimalFk;
-	
-	@JoinColumn(name = "id_adotante_fk", referencedColumnName = "idusuario")
-	@ManyToOne(optional = false)
-	private Usuario idAdotanteFk;
-	
-	@Column(name = "dataInicio", columnDefinition = "DATE")
+	@NotNull
+	@Column(name = "status", columnDefinition = "varchar(12)")
+	private String status;
+
+	@Column(name = "data_inicio", columnDefinition = "DATE")
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date dataInicio;
-	
-	@Column(name = "dataTermino", columnDefinition = "DATE")
+
+	@Column(name = "data_termino", columnDefinition = "DATE")
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date dataTermino;
-	private String status;
+
+	@NotNull
+	@JoinColumn(name = "id_animal_fk", referencedColumnName = "id")
+	@ManyToOne
+	private Animal idAnimalFk;
+
+	@NotNull
+	@JoinColumn(name = "id_adotante_fk", referencedColumnName = "id_usuario")
+	@ManyToOne
+	private Adotante idAdotanteFk;
 
 	public Adocao() {
 	}
 
-	public Adocao(int id) {
+	public Adocao(Integer id, String status, Date dataInicio, Date dataTermino, Animal idAnimalFk,
+			Adotante idAdotanteFk) {
 		super();
 		this.id = id;
+		this.status = status;
+		this.dataInicio = dataInicio;
+		this.dataTermino = dataTermino;
+		this.idAnimalFk = idAnimalFk;
+		this.idAdotanteFk = idAdotanteFk;
 	}
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -61,11 +74,11 @@ public class Adocao implements Serializable {
 		this.idAnimalFk = idAnimalFk;
 	}
 
-	public Usuario getIdAdotanteFk() {
+	public Adotante getIdAdotanteFk() {
 		return idAdotanteFk;
 	}
 
-	public void setIdAdotanteFk(Usuario idAdotanteFk) {
+	public void setIdAdotanteFk(Adotante idAdotanteFk) {
 		this.idAdotanteFk = idAdotanteFk;
 	}
 
@@ -97,7 +110,7 @@ public class Adocao implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + id;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
 
@@ -110,9 +123,11 @@ public class Adocao implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Adocao other = (Adocao) obj;
-		if (id != other.id)
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
 			return false;
 		return true;
 	}
-
 }
